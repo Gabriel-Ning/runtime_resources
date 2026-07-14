@@ -1,26 +1,34 @@
 # runtime_resources
 
-**Example 1** packages for
-[`physical_ai_runtime`](https://github.com/Gabriel-Ning/physical_ai_runtime):
-Marvin apps and RViz marker teleop. Clone this repository under a workspace
-`src/` tree; it is not a Pixi/colcon workspace by itself. Prefer `git clone`
-(not a submodule). Marvin embodiment packages stay **external** under
-`src/embodiments/robots/marvin/`.
+Mirror of the [`physical_ai_runtime`](https://github.com/Gabriel-Ning/physical_ai_runtime)
+**`src/` ownership layout**, holding Example 1 packages. This repository is only
+a folder tree — not a Pixi/colcon workspace by itself.
 
-The workspace also treats
-[`manipulation_execution_manager`](https://github.com/Gabriel-Ning/manipulation_execution_manager)
-and [`isaacteleop_toolbox`](https://github.com/Gabriel-Ning/isaacteleop_toolbox)
-as **necessary** baseline packages (clone those from the runtime README first).
+```text
+runtime_resources/                 →  physical_ai_runtime/src/
+  apps/                            →  src/apps/
+  toolbox/                         →  src/toolbox/
+  embodiments/robots/              →  src/embodiments/robots/
+  ...                              →  (same category names)
+```
 
-## Packages in this repository
+Copy (or clone-and-place) packages into the matching paths under a workspace
+`src/`. Do **not** nest this whole repo as `src/runtime_resources/`.
 
-| Path | Role |
-|------|------|
-| `apps/marvin_rviz_debug_bringup` | Example 1: RViz marker → EM → TSKPC (fake hardware first) |
-| `apps/marvin_trajectory_jtc_test` | Example 1: trajectory / JTC chain |
-| `toolbox/rviz_interactive_marker_teleop` | PoseStamped source for RViz markers |
+## Packages (Example 1)
+
+| Path in this repo | Place under workspace |
+|-------------------|------------------------|
+| `apps/marvin_rviz_debug_bringup` | `src/apps/marvin_rviz_debug_bringup` |
+| `apps/marvin_trajectory_jtc_test` | `src/apps/marvin_trajectory_jtc_test` |
+| `toolbox/rviz_interactive_marker_teleop` | `src/toolbox/rviz_interactive_marker_teleop` |
+
+Empty category directories match the workspace scaffolding and stay reserved for
+future examples.
 
 ## External packages used by Example 1
+
+Clone these beside the packages above (same ownership rules):
 
 | Repository | Workspace path |
 |------------|----------------|
@@ -28,15 +36,25 @@ as **necessary** baseline packages (clone those from the runtime README first).
 | [`marvin_hardware_interface`](https://github.com/Gabriel-Ning/marvin_hardware_interface) | `src/embodiments/robots/marvin/marvin_hardware_interface` |
 | [`manipulation_execution_manager`](https://github.com/Gabriel-Ning/manipulation_execution_manager) | `src/execution/manipulation_execution_manager` (necessary) |
 
+The workspace also treats
+[`isaacteleop_toolbox`](https://github.com/Gabriel-Ning/isaacteleop_toolbox)
+as necessary (`src/teleop/isaacteleop_toolbox`).
+
 ## Assemble Example 1
 
-From a `physical_ai_runtime` checkout (after the necessary EM / teleop clones):
+From a `physical_ai_runtime` checkout (after necessary EM / teleop clones):
 
 ```bash
-mkdir -p src/embodiments/robots/marvin
+# Place example packages into matching src/ ownership dirs
+git clone https://github.com/Gabriel-Ning/runtime_resources.git /tmp/runtime_resources
+cp -a /tmp/runtime_resources/apps/marvin_rviz_debug_bringup \
+      /tmp/runtime_resources/apps/marvin_trajectory_jtc_test \
+      src/apps/
+cp -a /tmp/runtime_resources/toolbox/rviz_interactive_marker_teleop \
+      src/toolbox/
 
-git clone https://github.com/Gabriel-Ning/runtime_resources.git \
-  src/runtime_resources
+# Marvin embodiment (external repos)
+mkdir -p src/embodiments/robots/marvin
 git clone https://github.com/Gabriel-Ning/marvin_description.git \
   src/embodiments/robots/marvin/marvin_description
 git clone https://github.com/Gabriel-Ning/marvin_hardware_interface.git \
@@ -45,7 +63,7 @@ git clone https://github.com/Gabriel-Ning/marvin_hardware_interface.git \
 pixi run build
 ```
 
-Then follow `apps/marvin_rviz_debug_bringup` (`use_fake_hardware:=true`).
+Then follow `src/apps/marvin_rviz_debug_bringup` (`use_fake_hardware:=true`).
 
 `colcon` discovers packages recursively under `src/`.
 
