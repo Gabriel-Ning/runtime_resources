@@ -34,24 +34,25 @@ as necessary (`src/teleop/isaacteleop_toolbox`).
 
 ## Assemble Example 1
 
-From a `physical_ai_runtime` checkout (after necessary EM / teleop clones):
+From a `physical_ai_runtime` checkout (after `vcs import src < repos/necessary.repos`):
 
 ```bash
-git clone https://github.com/Gabriel-Ning/runtime_resources.git /tmp/runtime_resources
-cp -a /tmp/runtime_resources/apps/marvin_rviz_debug_bringup \
-      /tmp/runtime_resources/apps/marvin_trajectory_jtc_test \
-      src/apps/
-cp -a /tmp/runtime_resources/toolbox/rviz_interactive_marker_teleop \
-      src/toolbox/
+# Embodiment repos (vcs; re-runnable / updatable with vcs pull)
+vcs import src < repos/example1.repos
 
-mkdir -p src/embodiments/robots/marvin
-git clone https://github.com/Gabriel-Ning/marvin_description.git \
-  src/embodiments/robots/marvin/marvin_description
-git clone https://github.com/Gabriel-Ning/marvin_hardware_interface.git \
-  src/embodiments/robots/marvin/marvin_hardware_interface
+# This repo's apps/ and toolbox/ → src/apps and src/toolbox (no /tmp)
+mkdir -p src/apps src/toolbox
+curl -fsSL https://github.com/Gabriel-Ning/runtime_resources/archive/refs/heads/main.tar.gz \
+  | tar -xz --strip-components=2 -C src/apps runtime_resources-main/apps
+curl -fsSL https://github.com/Gabriel-Ning/runtime_resources/archive/refs/heads/main.tar.gz \
+  | tar -xz --strip-components=2 -C src/toolbox runtime_resources-main/toolbox
 
 pixi run build
 ```
+
+`vcs` is used for full Git repositories. Apps/toolbox live in this monorepo, so
+they are unpacked with `curl|tar` directly into `src/apps` and `src/toolbox`
+(safe to re-run).
 
 Then follow `src/apps/marvin_rviz_debug_bringup` (`use_fake_hardware:=true`).
 
