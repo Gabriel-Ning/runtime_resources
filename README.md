@@ -37,22 +37,18 @@ as necessary (`src/teleop/isaacteleop_toolbox`).
 From a `physical_ai_runtime` checkout (after `vcs import src < repos/necessary.repos`):
 
 ```bash
-# Embodiment repos (vcs; re-runnable / updatable with vcs pull)
-vcs import src < repos/example1.repos
+vcs import src < repos/embodiment.repos
+bash scripts/fetch_example1_apps.sh   # runtime_resources apps/ → src/apps/
 
-# This repo's apps/ and toolbox/ → src/apps and src/toolbox (no /tmp)
-mkdir -p src/apps src/toolbox
-curl -fsSL https://github.com/Gabriel-Ning/runtime_resources/archive/refs/heads/main.tar.gz \
-  | tar -xz --strip-components=2 -C src/apps runtime_resources-main/apps
+mkdir -p src/toolbox
 curl -fsSL https://github.com/Gabriel-Ning/runtime_resources/archive/refs/heads/main.tar.gz \
   | tar -xz --strip-components=2 -C src/toolbox runtime_resources-main/toolbox
 
 pixi run build
 ```
 
-`vcs` is used for full Git repositories. Apps/toolbox live in this monorepo, so
-they are unpacked with `curl|tar` directly into `src/apps` and `src/toolbox`
-(safe to re-run).
+`repos/example1.repos` lists the apps; `scripts/fetch_example1_apps.sh` unpacks
+them into `src/apps/` (monorepo subtrees are not plain `vcs import` paths).
 
 Then follow `src/apps/marvin_rviz_debug_bringup` (`use_fake_hardware:=true`).
 
