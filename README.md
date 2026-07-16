@@ -19,11 +19,11 @@ live here. They are maintained directly under
 
 ## Import into physical_ai_runtime
 
-`physical_ai_runtime/repos/necessary.repos` maps this repository to
+`physical_ai_runtime/repos/example.repos` maps this repository to
 `src/apps`:
 
 ```bash
-vcs import src < repos/necessary.repos
+vcs import src < repos/example.repos
 vcs import src < repos/embodiment.repos
 pixi run build
 ```
