@@ -1,59 +1,36 @@
 # runtime_resources
 
-Example 1 packages for
+ROS 2 application packages for
 [`physical_ai_runtime`](https://github.com/Gabriel-Ning/physical_ai_runtime).
-This repository is only a small folder tree — not a Pixi/colcon workspace by
-itself. Place packages into the matching workspace `src/` paths:
+The repository is intentionally flat so it can be imported once with
+`vcstool` and discovered recursively by `colcon`.
 
-```text
-runtime_resources/apps/      →  physical_ai_runtime/src/apps/
-runtime_resources/toolbox/   →  physical_ai_runtime/src/toolbox/
-```
+## Packages
 
-Do **not** nest this whole repo as `src/runtime_resources/`.
+| Package | Purpose |
+|---|---|
+| `marvin_motion_planning_bringup` | Config-driven PyRoki setpoint, trajectory, and MPC demos |
+| `marvin_rviz_debug_bringup` | Marvin RViz and execution-chain debugging |
+| `marvin_trajectory_jtc_test` | EM-to-JTC trajectory-chain validation |
 
-## Packages (Example 1)
+Reusable workspace-owned tools such as `rviz_interactive_marker_teleop` do not
+live here. They are maintained directly under
+`physical_ai_runtime/src/toolbox`.
 
-| Path in this repo | Place under workspace |
-|-------------------|------------------------|
-| `apps/marvin_rviz_debug_bringup` | `src/apps/marvin_rviz_debug_bringup` |
-| `apps/marvin_trajectory_jtc_test` | `src/apps/marvin_trajectory_jtc_test` |
-| `toolbox/rviz_interactive_marker_teleop` | `src/toolbox/rviz_interactive_marker_teleop` |
+## Import into physical_ai_runtime
 
-## External packages used by Example 1
-
-| Repository | Workspace path |
-|------------|----------------|
-| [`marvin_description`](https://github.com/Gabriel-Ning/marvin_description) | `src/embodiments/robots/marvin/marvin_description` |
-| [`marvin_hardware_interface`](https://github.com/Gabriel-Ning/marvin_hardware_interface) | `src/embodiments/robots/marvin/marvin_hardware_interface` |
-| [`manipulation_execution_manager`](https://github.com/Gabriel-Ning/manipulation_execution_manager) | `src/execution/manipulation_execution_manager` (necessary) |
-
-The workspace also treats
-[`isaacteleop_toolbox`](https://github.com/Gabriel-Ning/isaacteleop_toolbox)
-as necessary (`src/teleop/isaacteleop_toolbox`).
-
-## Assemble Example 1
-
-From a `physical_ai_runtime` checkout (after `vcs import src < repos/necessary.repos`):
+`physical_ai_runtime/repos/necessary.repos` maps this repository to
+`src/runtime_resources`:
 
 ```bash
+vcs import src < repos/necessary.repos
 vcs import src < repos/embodiment.repos
-bash scripts/fetch_example1_apps.sh   # runtime_resources apps/ → src/apps/
-
-mkdir -p src/toolbox
-curl -fsSL https://github.com/Gabriel-Ning/runtime_resources/archive/refs/heads/main.tar.gz \
-  | tar -xz --strip-components=2 -C src/toolbox runtime_resources-main/toolbox
-
 pixi run build
 ```
 
-`repos/example1.repos` lists the apps; `scripts/fetch_example1_apps.sh` unpacks
-them into `src/apps/` (monorepo subtrees are not plain `vcs import` paths).
-
-Then follow `src/apps/marvin_rviz_debug_bringup` (`use_fake_hardware:=true`).
-
-`colcon` discovers packages recursively under `src/`.
+Do not copy individual packages or use the removed Example 1 fetch script.
+Each directory at this repository root is an independent ROS package.
 
 ## License
 
-See each package for its own license text (Apache-2.0 unless noted).
+See each package for its license declaration (Apache-2.0 unless noted).
