@@ -20,7 +20,7 @@ live here. They are maintained directly under
 ## Import into physical_ai_runtime
 
 `physical_ai_runtime/repos/necessary.repos` maps this repository to
-`src/runtime_resources`:
+`src/apps`:
 
 ```bash
 vcs import src < repos/necessary.repos
