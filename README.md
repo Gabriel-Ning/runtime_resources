@@ -23,10 +23,15 @@ live here. They are maintained directly under
 `src/apps`:
 
 ```bash
+vcs import src < repos/necessary.repos
 vcs import src < repos/example.repos
 vcs import src < repos/embodiment.repos
 pixi run build
 ```
+
+`necessary.repos` provides reusable execution and planning modules,
+`example.repos` provides these application packages, and `embodiment.repos`
+provides the Marvin robot description and hardware integration.
 
 Do not copy individual packages or use the removed Example 1 fetch script.
 Each directory at this repository root is an independent ROS package.
