@@ -9,6 +9,7 @@ The repository is intentionally flat so it can be imported once with
 
 | Package | Purpose |
 |---|---|
+| `hik_camera_bringup` | Hikrobot multi-camera site bringup (8× GigE + optional Foxglove) |
 | `marvin_motion_planning_bringup` | Config-driven PyRoki setpoint, trajectory, and MPC demos |
 | `marvin_rviz_debug_bringup` | Marvin RViz and execution-chain debugging |
 | `marvin_trajectory_jtc_test` | EM-to-JTC trajectory-chain validation |
