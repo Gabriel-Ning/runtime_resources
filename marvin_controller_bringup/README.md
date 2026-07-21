@@ -1,6 +1,26 @@
-# marvin_rviz_debug_bringup
+# marvin_controller_bringup
 
-First end-to-end debug pipeline for the Marvin embodiment, bimanual:
+Controller and legacy RViz debug bringup for the Marvin embodiment, bimanual.
+
+For distributed operation, the CPU host uses the marker-free controller
+launch:
+
+```bash
+ros2 launch marvin_controller_bringup controller_bringup.launch.py
+```
+
+It starts:
+
+```text
+2x execution manager
+  -> 2x TaskSpaceKinematicPositionController
+  -> ros2_control hardware (fake by default; real Marvin SDK opt-in)
+```
+
+`use_rviz` defaults to `false`. No interactive-marker node is defined or
+started by `controller_bringup.launch.py`.
+
+The legacy all-in-one debug launch remains available:
 
 ```text
 2x rviz interactive marker (source)
@@ -20,7 +40,7 @@ left and right beyond sharing one `controller_manager` process and one URDF.
 ## Run
 
 ```bash
-ros2 launch marvin_rviz_debug_bringup rviz_debug_bringup.launch.py
+ros2 launch marvin_controller_bringup rviz_debug_bringup.launch.py
 ```
 
 Drag either interactive marker in RViz (`target_marker_left` seeded at
@@ -49,11 +69,26 @@ tags itself -- it only clamps to `lower_limits`/`upper_limits` when given
 explicitly, and defaults to `+-inf` (unlimited) otherwise. If the native
 joint limits ever change, update both files.
 
+## Distributed (CPU + local PC)
+
+On the robot/CPU host keep EM + TSKPC + hardware; put markers and RViz on
+the local PC via `marvin_rviz_marker_teleop`. Same `ROS_DOMAIN_ID` on both
+hosts; for cross-machine DDS use `.config/cyclonedds_template.xml`.
+
+```bash
+# CPU
+ros2 launch marvin_controller_bringup controller_bringup.launch.py
+
+# Local PC
+ros2 launch marvin_rviz_marker_teleop rviz_marker_teleop.launch.py
+```
+
 ## Launch arguments
 
 | Argument | Default | Description |
 |---|---|---|
-| `use_rviz` | `true` | Launch RViz2 with Marvin's visualization config |
+| `use_rviz` | `false` (`controller_bringup`), `true` (`rviz_debug_bringup`) | Launch RViz2 with Marvin's visualization config |
+| `use_markers` | `true` | Legacy `rviz_debug_bringup` only: launch both interactive-marker sources |
 | `controllers_yaml` | `config/controllers.yaml` | `controller_manager` + both TSKPC instances' parameters |
 | `use_fake_hardware` | `true` | `true`: `mock_components/GenericSystem`. `false`: real Marvin SDK bridge |
 | `hardware_plugin` | `marvin_hardware_interface/MarvinBimanualArmHardware` | Real hardware plugin, used when `use_fake_hardware:=false` |
@@ -68,7 +103,7 @@ depend on.
 ## Real hardware
 
 ```bash
-ros2 launch marvin_rviz_debug_bringup rviz_debug_bringup.launch.py \
+ros2 launch marvin_controller_bringup controller_bringup.launch.py \
     use_fake_hardware:=false robot_ip:=10.19.0.191
 ```
 
@@ -93,7 +128,7 @@ covered by any automated test.
 ## Verify without RViz
 
 ```bash
-ros2 launch marvin_rviz_debug_bringup rviz_debug_bringup.launch.py use_rviz:=false
+ros2 launch marvin_controller_bringup controller_bringup.launch.py
 ros2 control list_controllers
 ros2 topic pub --once /action_sources/marker_left/pose_target geometry_msgs/msg/PoseStamped \
   "{header: {frame_id: Base_L}, pose: {position: {x: 0.3, y: 0.2, z: 0.4}, orientation: {w: 1.0}}}"

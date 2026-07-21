@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>marvin_rviz_debug_bringup</name>
+  <name>marvin_controller_bringup</name>
   <version>0.1.0</version>
   <description>
-    First end-to-end debug pipeline: RViz interactive marker teleop source ->
-    execution manager -> TaskSpaceKinematicPositionController on Marvin's
-    left arm, running on ros2_control fake hardware. No real robot, no SDK.
+    Marvin bimanual controller bringup: execution managers,
+    TaskSpaceKinematicPositionControllers, ros2_control hardware, and optional
+    RViz. Includes a legacy all-in-one interactive-marker debug launch.
   </description>
   <maintainer email="guomning@gmail.com">Gabriel-Ning</maintainer>
   <license>Apache-2.0</license>

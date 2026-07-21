@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>marvin_rviz_marker_teleop</name>
+  <version>0.1.0</version>
+  <description>
+    Local-PC UI for Marvin bimanual RViz interactive-marker teleop.
+    Publishes PoseStamped sources only; expects EM / TSKPC / hardware on a
+    peer machine over the same ROS_DOMAIN_ID (and CycloneDDS peers when
+    cross-host).
+  </description>
+  <maintainer email="guomning@gmail.com">Gabriel-Ning</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>marvin_description</exec_depend>
+  <exec_depend>rviz_interactive_marker_teleop</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
