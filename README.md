@@ -12,11 +12,11 @@ The repository is intentionally flat so it can be imported once with
 | `hik_camera_bringup` | Hikrobot multi-camera site bringup (8× GigE + optional Foxglove) |
 | `marvin_motion_planning_bringup` | Config-driven PyRoki setpoint, trajectory, and MPC demos |
 | `marvin_controller_bringup` | Marker-free Marvin controller bringup plus legacy all-in-one RViz debugging |
-| `marvin_rviz_marker_teleop` | Local-PC RViz interactive-marker UI for distributed teleop |
+| `rviz_marker_teleop` | Config-driven local-PC RViz interactive-marker UI for distributed teleop |
 | `marvin_trajectory_jtc_test` | EM-to-JTC trajectory-chain validation |
 | `episode_recorder_app` | Hardware-agnostic, config-driven episode-recording app (bundled stream-contract profiles + rigorous lifecycle activation) |
 
-Reusable workspace-owned tools such as `rviz_interactive_marker_teleop` do not
+Reusable workspace-owned tools such as `rviz_interactive_marker_pose_source` do not
 live here. They are maintained directly under
 `physical_ai_runtime/src/toolbox`.
 

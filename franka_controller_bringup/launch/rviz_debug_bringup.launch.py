@@ -1,6 +1,6 @@
 # Copyright 2026
 # SPDX-License-Identifier: Apache-2.0
-"""All-in-one Marvin controller and RViz-marker debug bringup."""
+"""All-in-one Franka controller and RViz-marker debug bringup."""
 
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
@@ -12,8 +12,8 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description() -> LaunchDescription:
-    """Compose the pure controller service with the Marvin marker profile."""
-    bringup_share = FindPackageShare('marvin_controller_bringup')
+    """Compose the pure controller service with the Franka marker profile."""
+    bringup_share = FindPackageShare('franka_controller_bringup')
 
     controller_bringup = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -23,9 +23,14 @@ def generate_launch_description() -> LaunchDescription:
         ),
         launch_arguments={
             'controllers_yaml': LaunchConfiguration('controllers_yaml'),
+            'execution_manager_yaml': LaunchConfiguration(
+                'execution_manager_yaml'
+            ),
             'use_fake_hardware': LaunchConfiguration('use_fake_hardware'),
-            'hardware_plugin': LaunchConfiguration('hardware_plugin'),
             'robot_ip': LaunchConfiguration('robot_ip'),
+            'load_franka_robot_state_broadcaster': LaunchConfiguration(
+                'load_franka_robot_state_broadcaster'
+            ),
         }.items(),
     )
 
@@ -40,7 +45,7 @@ def generate_launch_description() -> LaunchDescription:
             )
         ),
         launch_arguments={
-            'profile': 'marvin',
+            'profile': 'franka',
             'use_rviz': LaunchConfiguration('use_rviz'),
         }.items(),
         condition=IfCondition(LaunchConfiguration('use_markers')),
@@ -51,39 +56,46 @@ def generate_launch_description() -> LaunchDescription:
             DeclareLaunchArgument(
                 'use_rviz',
                 default_value='true',
-                description='Launch RViz with the Marvin profile.',
+                description='Launch RViz with the Franka profile.',
             ),
             DeclareLaunchArgument(
                 'use_markers',
                 default_value='true',
-                description='Launch both Marvin interactive-marker sources.',
+                description='Launch the Franka interactive-marker source.',
             ),
             DeclareLaunchArgument(
                 'controllers_yaml',
                 default_value=PathJoinSubstitution(
                     [bringup_share, 'config', 'controllers.yaml']
                 ),
-                description='controller_manager and both TSKPC parameters.',
+                description='controller_manager and TSKPC parameter file.',
+            ),
+            DeclareLaunchArgument(
+                'execution_manager_yaml',
+                default_value=PathJoinSubstitution(
+                    [bringup_share, 'config', 'execution_manager.yaml']
+                ),
+                description='Execution-manager route profile.',
             ),
             DeclareLaunchArgument(
                 'use_fake_hardware',
                 default_value='true',
                 description=(
                     'Use fake hardware. Set false only for a present, '
-                    'powered, and safed Marvin.'
+                    'powered, and safed FR3.'
                 ),
-            ),
-            DeclareLaunchArgument(
-                'hardware_plugin',
-                default_value=(
-                    'marvin_hardware_interface/MarvinBimanualArmHardware'
-                ),
-                description='Real Marvin ros2_control hardware plugin.',
             ),
             DeclareLaunchArgument(
                 'robot_ip',
-                default_value='10.19.0.191',
-                description='Marvin controller IP; ignored by fake hardware.',
+                default_value='192.168.2.101',
+                description='FR3 hostname or IP; ignored by fake hardware.',
+            ),
+            DeclareLaunchArgument(
+                'load_franka_robot_state_broadcaster',
+                default_value='true',
+                description=(
+                    'Load the vendor state broadcaster on real hardware.'
+                ),
             ),
             controller_bringup,
             marker_ui,
