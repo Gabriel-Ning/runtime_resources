@@ -4,16 +4,13 @@
 
 Starts robot_state_publisher, ros2_control, both execution managers, and both
 TaskSpaceKinematicPositionController instances. Interactive markers are not
-part of this launch; run marvin_rviz_marker_teleop on the operator PC.
-
-RViz is available for local debugging but disabled by default.
+part of this launch; run rviz_marker_teleop on the operator PC.
 """
 import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchContext, LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction, RegisterEventHandler
-from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
@@ -107,26 +104,9 @@ def _execution_manager_node(side: str) -> Node:
 
 def generate_launch_description() -> LaunchDescription:
     bringup_share = get_package_share_directory("marvin_controller_bringup")
-    marvin_share = get_package_share_directory("marvin_description")
-
-    rviz = Node(
-        package="rviz2",
-        executable="rviz2",
-        name="rviz2",
-        arguments=[
-            "--display-config",
-            PathJoinSubstitution([marvin_share, "rviz", "visualize_marvin.rviz"]),
-        ],
-        condition=IfCondition(LaunchConfiguration("use_rviz")),
-    )
 
     return LaunchDescription(
         [
-            DeclareLaunchArgument(
-                "use_rviz",
-                default_value="false",
-                description="Launch RViz2 for local controller debugging.",
-            ),
             DeclareLaunchArgument(
                 "controllers_yaml",
                 default_value=PathJoinSubstitution(
@@ -161,6 +141,5 @@ def generate_launch_description() -> LaunchDescription:
             OpaqueFunction(function=_controller_nodes),
             _execution_manager_node("left"),
             _execution_manager_node("right"),
-            rviz,
         ]
     )

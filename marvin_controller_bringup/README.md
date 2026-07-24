@@ -1,6 +1,6 @@
 # marvin_controller_bringup
 
-Controller and legacy RViz debug bringup for the Marvin embodiment, bimanual.
+Controller service and all-in-one RViz debug bringup for bimanual Marvin.
 
 For distributed operation, the CPU host uses the marker-free controller
 launch:
@@ -17,10 +17,9 @@ It starts:
   -> ros2_control hardware (fake by default; real Marvin SDK opt-in)
 ```
 
-`use_rviz` defaults to `false`. No interactive-marker node is defined or
-started by `controller_bringup.launch.py`.
-
-The legacy all-in-one debug launch remains available:
+No RViz or interactive-marker node is defined or started by
+`controller_bringup.launch.py`. The all-in-one local debug launch composes
+that pure service with `rviz_marker_teleop profile:=marvin`:
 
 ```text
 2x rviz interactive marker (source)
@@ -47,7 +46,7 @@ Drag either interactive marker in RViz (`target_marker_left` seeded at
 `flange_L`'s current pose, `target_marker_right` seeded at `flange_R`'s).
 Each side's pose streams independently through:
 
-1. `rviz_interactive_marker_teleop` publishes `PoseStamped` on
+1. `rviz_interactive_marker_pose_source` publishes `PoseStamped` on
    `/action_sources/marker_<side>/pose_target`.
 2. `manipulation_execution_manager` (`em_left` / `em_right`) validates and
    forwards the winning route to
@@ -72,7 +71,7 @@ joint limits ever change, update both files.
 ## Distributed (CPU + local PC)
 
 On the robot/CPU host keep EM + TSKPC + hardware; put markers and RViz on
-the local PC via `marvin_rviz_marker_teleop`. Same `ROS_DOMAIN_ID` on both
+the local PC via `rviz_marker_teleop`. Same `ROS_DOMAIN_ID` on both
 hosts; for cross-machine DDS use `.config/cyclonedds_template.xml`.
 
 ```bash
@@ -80,15 +79,15 @@ hosts; for cross-machine DDS use `.config/cyclonedds_template.xml`.
 ros2 launch marvin_controller_bringup controller_bringup.launch.py
 
 # Local PC
-ros2 launch marvin_rviz_marker_teleop rviz_marker_teleop.launch.py
+ros2 launch rviz_marker_teleop rviz_marker_teleop.launch.py profile:=marvin
 ```
 
 ## Launch arguments
 
 | Argument | Default | Description |
 |---|---|---|
-| `use_rviz` | `false` (`controller_bringup`), `true` (`rviz_debug_bringup`) | Launch RViz2 with Marvin's visualization config |
-| `use_markers` | `true` | Legacy `rviz_debug_bringup` only: launch both interactive-marker sources |
+| `use_rviz` | `true` | `rviz_debug_bringup` only: launch RViz with the Marvin profile |
+| `use_markers` | `true` | `rviz_debug_bringup` only: launch both interactive-marker sources |
 | `controllers_yaml` | `config/controllers.yaml` | `controller_manager` + both TSKPC instances' parameters |
 | `use_fake_hardware` | `true` | `true`: `mock_components/GenericSystem`. `false`: real Marvin SDK bridge |
 | `hardware_plugin` | `marvin_hardware_interface/MarvinBimanualArmHardware` | Real hardware plugin, used when `use_fake_hardware:=false` |
@@ -161,4 +160,4 @@ positions in `/joint_states` move toward their respective IK solutions.
 
 Apache-2.0. This package composes `marvin_description`,
 `manipulation_execution_manager`, `manipulation_position_controllers`, and
-`rviz_interactive_marker_teleop`; see each for its own license text.
+`rviz_marker_teleop`; see each for its own license text.

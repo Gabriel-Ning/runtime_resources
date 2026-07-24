@@ -102,7 +102,7 @@ def _create_nodes(context: LaunchContext) -> list:
             suffix = "L" if plan.side == "left" else "R"
             actions.append(
                 Node(
-                    package="rviz_interactive_marker_teleop",
+                    package="rviz_interactive_marker_pose_source",
                     executable="target_marker_node.py",
                     name=f"{plan.side}_target_marker",
                     output="screen",

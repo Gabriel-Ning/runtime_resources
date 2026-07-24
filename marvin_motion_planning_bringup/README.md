@@ -92,4 +92,4 @@ The launch activates JTC for `global_trajectory` and JSPC for
 the same arm.
 
 Trajectory targets use the RViz Plan/Execute panel. Setpoint and MPC targets are
-streamed by `rviz_interactive_marker_teleop`.
+streamed by `rviz_interactive_marker_pose_source`.

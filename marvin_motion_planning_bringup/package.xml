@@ -17,7 +17,7 @@
   <exec_depend>marvin_description</exec_depend>
   <exec_depend>pyroki_planner_adapter</exec_depend>
   <exec_depend>manipulation_execution_manager</exec_depend>
-  <exec_depend>rviz_interactive_marker_teleop</exec_depend>
+  <exec_depend>rviz_interactive_marker_pose_source</exec_depend>
   <exec_depend>rviz_topic_button_panel</exec_depend>
   <exec_depend>rviz2</exec_depend>
   <exec_depend>ros-jazzy-manipulation-position-controllers</exec_depend>
